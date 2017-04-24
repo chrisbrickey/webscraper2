@@ -24,28 +24,45 @@ def scrape (url_string, tag_pattern)
   parsed_array
 end
 
+
+emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 #Emily's list full target tag: <article id="content" class="base main-content" role="main">
+  # <p><strong>Wednesday, May 3, 2017<br />
+  # Washington, DC</strong><br />
+  # <a href="http://www.emilyslist.org/2017">We Are EMILY National Conference &amp;Gala</a></p>
 
-#The following URLs and tag_patterns work ...
-#pulls all event content into one node
-one = scrape("http://www.emilyslist.org/pages/entry/events", "article#content")
-#pulls all event content into one node
-two = scrape("http://www.emilyslist.org/pages/entry/events", "article[class='base main-content']")
+
+#pulls date and location info into each node
+scrape(emilys_URL, "//article//p//strong")
+
+#pulls website and event_location into each node
+scrape_for_href(emilys_URL, "//article//p//a")
+
 #pulls all event content (within p-tags) into multiple nodes, a node for every p-tag
-three = scrape("http://www.emilyslist.org/pages/entry/events", "//article//p")
-#below code pushes all the code in between article-tags into one element of NodeSet because there is only one article tag set in the URL
-four = scrape("http://www.emilyslist.org/pages/entry/events", "//article")
-#below code pushes all the code in between p-tags into separate elements of the NodeSet
-five = scrape("http://www.emilyslist.org/pages/entry/events", "//p")
+# scrape(emilys_URL, "//article//p")
+# scrape(emilys_URL, "//p")
 
-# puts one[0]
-# puts two[0]
-# puts three[0]
-# puts four[0]
-# puts five[0]
+#pulls all content into one node ...
+# scrape(emilys_URL, "article#content")
+# scrape(emilys_URL, "article[class='base main-content']")
+# scrape(emilys_URL, "//article")
+
+emilys_hash = {
+  event_name: 'empty',
+  date: 'empty',
+  location: 'empty',
+  website: 'empty',
+}
+
+emilys_hash[:title] = scrape(emilys_URL, "__________")
+emilys_hash[:date] = scrape(emilys_URL, "__________")
+emilys_hash[:location] = scrape(emilys_URL, "__________")
+emilys_hash[:website] = scrape(emilys_URL, "__________")
 
 
 #Next Steps:
+#Adjust method to start by pulling each event into a node (article/p) and then use a loop to breakdown each element into four components
+
 #Setup a class for target sites.  Each instance will have a unique URL and tag patterns for event name, contact, date, etc. Then the scrape method can be called on each instance to produce an input to the API.
 #An interim step might be to just make a hash that maps URLs to tag_patterns so can loop through multiple tag_patterns for each URL
 #e.g. url_map = { "http://www.emilyslist.org/pages/entry/events" => ["//article//p", _____, _____] }
