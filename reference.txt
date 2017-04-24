@@ -1,0 +1,47 @@
+Syntax for selection using nokogiri / open-uri
+source: http://ruby.bastardsbook.com/chapters/html-parsing/
+
+To select...
+
+  the <title> element
+  e.g. <head><title>My webpage</title></head>
+    scraped_object.css('title')
+    ==> <title>My webpage</title>
+
+
+  Sample code for below selections:
+  <div id="funstuff">
+   <p>Here are some entertaining links:</p>
+   <ul>
+      <li><a href="http://youtube.com">YouTube</a></li>
+      <li><a data-category="news" href="http://reddit.com">Reddit</a></li>
+   </ul>
+  </div>
+
+
+    all <li> elements
+      scraped_object.css('li')
+      ==> <li><a href="http://youtube.com">YouTube</a></li>
+          <li><a data-category="news" href="http://reddit.com">Reddit</a></li>
+
+    the text of the first <li> element
+      scraped_object.css('li')[0].text
+      ==> YouTube
+
+    the url of the second <li> element
+      scraped_object.css('li')[1]['href']
+      ==> http://reddit.com
+
+    the <li> elements with a data-category of new
+      scraped_object.css("li[data-category='news']")
+      ==>  <li><a data-category="news" href="http://reddit.com">Reddit</a></li>
+
+
+    the <div> element with an id of "funstuff"
+      scraped_object.css('div#funstuff')
+      ==> everything above
+      *if you just want to pull the content of the actual tag (instead of the content in between), add [0] to the end of the above
+
+    the <a> elements nested inside the <div> element that has an id of "funstuff"
+      scraped_object.css('div#funstuff a')
+      ==> <a href="http://youtube.com">YouTube</a>

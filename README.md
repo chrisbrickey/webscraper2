@@ -1,5 +1,5 @@
 # webscraper2
-This program defines a method called "scrape" that scrapes a URL and parses by HTML element tags. I endeavor to make it parse by CSS class name.
+This program defines a method called "scrape" that scrapes a URL and parses by HTML elements (e.g. HTML tag, CSS class, CSS ID). It will eventually return an object of event data.
 
 
 ## Technology
@@ -12,10 +12,11 @@ Ruby version 2.4.0p0
 
 ## Setup
 * Run from terminal: `ruby primary_file.rb`
+* See reference.txt for guide to selecting HTML elements
 
 
 ## Upcoming Features
-* Parse by CSS class
-* While loop to iterate through multiple sites
+* Adjust scrape method to return an object that can be accepted as input by CTA Aggregator API
+* Use mechanize to pass in forms when required (e.g. 5calls.org requires zip and issue) to get URL to scrape
+* Facilitate scraping of multiple URLs by creating a class Target to store target instances with unique URLs and target_patterns
 * Use spooky.js for sites that use Ajax - Nokogiri won't work alone
-* What about sites that require authentication (username/password)? Use Mechanize to fill out forms? Compliance issues?
