@@ -11,7 +11,7 @@ def scrape (url_string, tag_pattern)
   scraped_object = Nokogiri::HTML(open(url_string))
 
   #filters the scraped_object and stores it into a node set
-  #if the tag_pattern pulls only one section, this will be like an array with only one item
+  #if the tag_pattern pulls only one section, this will be an array with only one item
   #tag_patterns can be specified to pull multiple items (e.g. multiple <p></p> that match the same condition) which result in an array of many items
   parsed_node_set = scraped_object.css(tag_pattern)
 
@@ -21,7 +21,7 @@ def scrape (url_string, tag_pattern)
     parsed_array << element.to_s
   end
 
-  parsed_array
+  print parsed_array
 end
 
 
@@ -34,9 +34,10 @@ emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 
 #pulls date and location info into each node
 scrape(emilys_URL, "//article//p//strong")
+puts "\n"
 
 #pulls website and event_location into each node
-scrape_for_href(emilys_URL, "//article//p//a")
+scrape(emilys_URL, "//article//p//a")
 
 #pulls all event content (within p-tags) into multiple nodes, a node for every p-tag
 # scrape(emilys_URL, "//article//p")
