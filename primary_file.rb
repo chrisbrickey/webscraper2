@@ -47,11 +47,13 @@ dates_and_locations.each_with_index do |combo_string, event_number|
   website_title_str = websites_and_titles[event_number][9..-5]
   event_website, event_title = website_title_str.split("\">")
 
+  #These two categories are unknown for Emily's list event URL. This information requires additional logic.
+  free = false
   cta_type = "onsite"
 
   emilys_array << {
     description:  event_title,
-    free:         "unknown",      #assuming this means fee or no fee, can't tell from primary URL, check for tickets (often multiple tiers of participation)?
+    free:         free,
     start_at:     event_date,
     end_at:       event_date,
     cta_type:     cta_type,       #onsite or phone
