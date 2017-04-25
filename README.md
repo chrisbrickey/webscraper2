@@ -19,4 +19,5 @@ Ruby version 2.4.0p0
 * Adjust scrape method to return an object that can be accepted as input by CTA Aggregator API
 * Use mechanize to pass in forms when required (e.g. 5calls.org requires zip and issue) to get URL to scrape
 * Facilitate scraping of multiple URLs by creating a class Target to store target instances with unique URLs and target_patterns
+* Incorporate regular expressions to make parsing less clunky 
 * Use spooky.js for sites that use Ajax - Nokogiri won't work alone
