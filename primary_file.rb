@@ -21,7 +21,7 @@ def scrape (url_string, tag_pattern)
     parsed_array << element.to_s
   end
 
-  print parsed_array
+  parsed_array
 end
 
 
@@ -33,11 +33,14 @@ emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 
 
 #pulls date and location info into each node
-scrape(emilys_URL, "//article//p//strong")
-puts "\n"
+date_and_location = scrape(emilys_URL, "//article//p//strong")
 
-#pulls website and event_location into each node
-scrape(emilys_URL, "//article//p//a")
+#pulls website and event_title into each node (has one extra entry up front and at the end that needs to be removed...not related to events)
+site_and_title = scrape(emilys_URL, "//article//p//a")[1..-1]
+
+puts date_and_location
+puts "\n"
+puts site_and_title
 
 #pulls all event content (within p-tags) into multiple nodes, a node for every p-tag
 # scrape(emilys_URL, "//article//p")
