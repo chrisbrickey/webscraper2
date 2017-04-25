@@ -33,39 +33,37 @@ emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 
 
 #pulls date and location info into each node
-date_and_location = scrape(emilys_URL, "//article//p//strong")
+dates_and_locations = scrape(emilys_URL, "//article//p//strong")
+#pulls website and event_title into each node AND removes non-event items
+websites_and_titles = scrape(emilys_URL, "//article//p//a")[1..-1]
 
-#pulls website and event_title into each node (has one extra entry up front and at the end that needs to be removed...not related to events)
-site_and_title = scrape(emilys_URL, "//article//p//a")[1..-1]
+emilys_array = []
 
-puts date_and_location
-puts "\n"
-puts site_and_title
+dates_and_locations.each_with_index do |combo_string, event_number|
+  #use regex instead?
+  date_loc_str = combo_string[8..-10]
+  event_date, event_location = date_loc_str.split("<br>\n")
 
-#pulls all event content (within p-tags) into multiple nodes, a node for every p-tag
-# scrape(emilys_URL, "//article//p")
-# scrape(emilys_URL, "//p")
+  website_title_str = websites_and_titles[event_number][9..-5]
+  event_website, event_title = website_title_str.split("\">")
 
-#pulls all content into one node ...
-# scrape(emilys_URL, "article#content")
-# scrape(emilys_URL, "article[class='base main-content']")
-# scrape(emilys_URL, "//article")
+  emilys_array << {
+    ID:       event_number,
+    title:    event_title,
+    date:     event_date,
+    location: event_location,
+    website:  event_website
+    }
 
-emilys_hash = {
-  event_name: 'empty',
-  date: 'empty',
-  location: 'empty',
-  website: 'empty',
-}
+end
 
-emilys_hash[:title] = scrape(emilys_URL, "__________")
-emilys_hash[:date] = scrape(emilys_URL, "__________")
-emilys_hash[:location] = scrape(emilys_URL, "__________")
-emilys_hash[:website] = scrape(emilys_URL, "__________")
+#values are still in string format
+puts emilys_array
+
 
 
 #Next Steps:
-#Adjust method to start by pulling each event into a node (article/p) and then use a loop to breakdown each element into four components
+#Try to pull each event into a node (article/p) FIRST and then use a loop to breakdown each element into four components to avoid data points getting associated with wrong event
 
 #Setup a class for target sites.  Each instance will have a unique URL and tag patterns for event name, contact, date, etc. Then the scrape method can be called on each instance to produce an input to the API.
 #An interim step might be to just make a hash that maps URLs to tag_patterns so can loop through multiple tag_patterns for each URL
@@ -73,12 +71,3 @@ emilys_hash[:website] = scrape(emilys_URL, "__________")
 
 #See this page for how to assign specific tags based on the URL: http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html
 #doc.css('//car:tire', 'car' => 'http://alicesautoparts.com/')
-
-
-#Additional code that strips tags
-#Currently strips length of p-tags on each end; needs to change based on the length of the tag
-def stripper(parsed_array)
-  parsed_array.map! do |str|
-    str[3..-5]
-  end
-end
