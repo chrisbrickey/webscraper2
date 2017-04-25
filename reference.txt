@@ -45,3 +45,40 @@ To select...
     the <a> elements nested inside the <div> element that has an id of "funstuff"
       scraped_object.css('div#funstuff a')
       ==> <a href="http://youtube.com">YouTube</a>
+
+
+JSON object constraints:
+source: https://www.w3schools.com/js/js_json_objects.asp
+- JSON objects are surrounded by curly braces {}.
+- JSON objects is written in key/value pairs.
+- Keys must be strings, and values must be a valid JSON data type (string, number, object, array, boolean or null).
+- Keys and values are separated by a colon.
+- Each key/value pair is separated by a comma
+
+# Scenario: Create an CTA with contact, location, and call script
+# And the client sets the JSON request body to:
+#  {
+#    "data": {
+#       "type": "ctas",
+#       "attributes": {
+#          "title": "foobar",
+#          "description": "Lorem ipsum",
+#          "free": true,
+#          "start-time": "1526725814",
+#          "end-time": "1526740214",
+#          "cta-type": "phone",
+#          "website": "www.example.com"
+#        },
+#        "relationships": {
+#          "location": {
+#            "data": { "type": "locations", "id": "bbbbbbbb-1111-2222-3333-666666666666" }
+#          },
+#          "contact": {
+#            "data": { "type": "contacts", "id": "cccccccc-1111-2222-3333-666666666666" }
+#          },
+#          "call-script": {
+#            "data": { "type": "call-scripts", "id": "dddddddd-1111-2222-3333-666666666666" }
+#          }
+#        }
+#     }
+#  }

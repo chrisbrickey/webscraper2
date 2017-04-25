@@ -26,18 +26,11 @@ end
 
 
 emilys_URL = "http://www.emilyslist.org/pages/entry/events"
-#Emily's list full target tag: <article id="content" class="base main-content" role="main">
-  # <p><strong>Wednesday, May 3, 2017<br />
-  # Washington, DC</strong><br />
-  # <a href="http://www.emilyslist.org/2017">We Are EMILY National Conference &amp;Gala</a></p>
 
+dates_and_locations = scrape(emilys_URL, "//article//p//strong")  #pulls date and location info into each node
+websites_and_titles = scrape(emilys_URL, "//article//p//a")[1..-1]  #pulls website and event_title into each node AND removes non-event items
 
-#pulls date and location info into each node
-dates_and_locations = scrape(emilys_URL, "//article//p//strong")
-#pulls website and event_title into each node AND removes non-event items
-websites_and_titles = scrape(emilys_URL, "//article//p//a")[1..-1]
-
-emilys_array = []
+events_array = []
 
 dates_and_locations.each_with_index do |combo_string, event_number|
   #use regex instead?
@@ -47,31 +40,46 @@ dates_and_locations.each_with_index do |combo_string, event_number|
   website_title_str = websites_and_titles[event_number][9..-5]
   event_website, event_title = website_title_str.split("\">")
 
-  #These two categories are unknown for Emily's list event URL. This information requires additional logic.
+  #These two categories are unknown from Emily's list event URL. This information requires additional logic.
   free = false
   cta_type = "onsite"
 
-  emilys_array << {
-    description:  event_title,
-    free:         free,
-    start_at:     event_date,
-    end_at:       event_date,
-    cta_type:     cta_type,       #onsite or phone
-    website:      event_website,
-    #below fields are not specified in CTA aggregator
-    temp_ID:      event_number,
-    location:     event_location,
-    }
+  json_event_object = {
+       "data": {
+          "type": "ctas",
+          "attributes": {
+             "title": event_title,          #String
+             "description": "",             #String
+             "free": free,                  #TrueClass
+             "start-time": event_date,      #should be Integer but still String
+             "end-time": event_date,        #should be Integer but still String
+             "cta-type": cta_type,          #String ("onsite" or "phone")
+             "website": event_website       #String
+           },
+           "relationships": {
+             "location": {
+               "data": { "type": "locations", "id": event_location } #String
+             },
+             "contact": {
+               "data": { "type": "contacts", "id": "" }
+             },
+             "call-script": {
+               "data": { "type": "call-scripts", "id": "" }
+             }
+           }
+        }
+      }
 
+    events_array << json_event_object
 end
 
 #values are still in string format
-puts emilys_array
+puts events_array
 
 
 
 
-#not necessary for Emily's list (all onsite), but may need to use some kind of logic to determine this for other sites
+#may not be necessary for Emily's list (most onsite), but may need to use some kind of logic to determine this for other sites
 # if event_location.split(" ").length == 0
 #   cta_type = phone
 # end
@@ -85,3 +93,25 @@ puts emilys_array
 
 #See this page for how to assign specific tags based on the URL: http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html
 #doc.css('//car:tire', 'car' => 'http://alicesautoparts.com/')
+
+
+#Emily's list full target tag: <article id="content" class="base main-content" role="main">
+  # <p><strong>Wednesday, May 3, 2017<br />
+  # Washington, DC</strong><br />
+  # <a href="http://www.emilyslist.org/2017">We Are EMILY National Conference &amp;Gala</a></p>
+
+
+#SIMPLIFIED OBJECT STRUCTURE
+  # json_event_object = {
+  #   "title":        event_title,    #String
+  #   "description":  "",             #String
+  #   "free":         free,           #TrueClass
+  #   "start_at":     event_date,     #should be Integer but still String
+  #   "end_at":       event_date,     #should be Integer but still String
+  #   "cta_type":     cta_type,       #String ("onsite" or "phone")
+  #   "website":      event_website,  #String
+  #
+  #   #below fields are not specified in CTA aggregator
+  #   "temp_ID":      event_number,   #Integer
+  #   "location":     event_location  #String
+  # }
