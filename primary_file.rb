@@ -11,8 +11,7 @@ def scrape (url_string, tag_pattern)
   scraped_object = Nokogiri::HTML(open(url_string))
 
   #filters the scraped_object and stores it into a node set
-  #if the tag_pattern pulls only one section, this will be an array with only one item
-  #tag_patterns can be specified to pull multiple items (e.g. multiple <p></p> that match the same condition) which result in an array of many items
+  #tag_patterns are ideally specified to pull multiple items (e.g. multiple <p></p> that match the same condition) which result in an array of many items
   parsed_node_set = scraped_object.css(tag_pattern)
 
   parsed_array = []
@@ -33,9 +32,11 @@ websites_and_titles = scrape(emilys_URL, "//article//p//a")[1..-1]  #pulls websi
 events_array = []
 
 dates_and_locations.each_with_index do |combo_string, event_number|
+
   #use regex instead?
   date_loc_str = combo_string[8..-10]
   event_date, event_location = date_loc_str.split("<br>\n")
+  event_date = Date.parse event_date   #transforms string to date integer
 
   website_title_str = websites_and_titles[event_number][9..-5]
   event_website, event_title = website_title_str.split("\">")
@@ -44,15 +45,15 @@ dates_and_locations.each_with_index do |combo_string, event_number|
   free = false
   cta_type = "onsite"
 
-  json_event_object = {
+  event_object = {
        "data": {
           "type": "ctas",
           "attributes": {
              "title": event_title,          #String
              "description": "",             #String
              "free": free,                  #TrueClass
-             "start-time": event_date,      #should be Integer but still String
-             "end-time": event_date,        #should be Integer but still String
+             "start-time": event_date,      #Integer date without time
+             "end-time": event_date,        #Integer date without time
              "cta-type": cta_type,          #String ("onsite" or "phone")
              "website": event_website       #String
            },
@@ -70,21 +71,15 @@ dates_and_locations.each_with_index do |combo_string, event_number|
         }
       }
 
-    events_array << json_event_object
+    events_array << event_object
 end
 
-#values are still in string format
+
 puts events_array
 
 
 
-
-#may not be necessary for Emily's list (most onsite), but may need to use some kind of logic to determine this for other sites
-# if event_location.split(" ").length == 0
-#   cta_type = phone
-# end
-
-#Next Steps:
+#NEXT STEPS:
 #Try to pull each event into a node (article/p) FIRST and then use a loop to breakdown each element into four components to avoid data points getting associated with wrong event
 
 #Setup a class for target sites.  Each instance will have a unique URL and tag patterns for event name, contact, date, etc. Then the scrape method can be called on each instance to produce an input to the API.
@@ -95,11 +90,17 @@ puts events_array
 #doc.css('//car:tire', 'car' => 'http://alicesautoparts.com/')
 
 
+
 #Emily's list full target tag: <article id="content" class="base main-content" role="main">
   # <p><strong>Wednesday, May 3, 2017<br />
   # Washington, DC</strong><br />
   # <a href="http://www.emilyslist.org/2017">We Are EMILY National Conference &amp;Gala</a></p>
 
+
+#LOCATION LOGIC: may not be necessary for Emily's list (most onsite), but may need to use some kind of logic to determine this for other sites
+  # if event_location.split(" ").length == 0
+  #   cta_type = phone
+  # end
 
 #SIMPLIFIED OBJECT STRUCTURE
   # json_event_object = {
