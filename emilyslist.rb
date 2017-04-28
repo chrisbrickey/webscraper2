@@ -1,13 +1,12 @@
 require 'rubygems'
-#lets us turn the string into a nokogiri object
 require 'nokogiri'
-#lets us use the 'open' method that does all the work of making the HTTP request to get the raw HTML. 'restclient' is an alternative to open-uri
 require 'open-uri'
+
 
 #Parameters must be in string format e.g. ("http://www.testing123.com", "//outertag//innertag")
 def scrape (url_string, tag_pattern)
 
-  #scrapes entire HTML document and places it in a Nokogiri object
+  #scrapes entire HTML document and places it in a Nokogiri object (requires 'nokogiri' and 'open-uri')
   scraped_object = Nokogiri::HTML(open(url_string))
 
   #filters the scraped_object and stores it into a node set
@@ -24,58 +23,67 @@ def scrape (url_string, tag_pattern)
 end
 
 
-emilys_URL = "http://www.emilyslist.org/pages/entry/events"
+def pull_event_data (url_string) #used to have a second parameter (parsed_array) but I think that was superfluous
+  dates_and_locations = scrape(url_string, "//article//p//strong")  #pulls date and location info into each node
+  websites_and_titles = scrape(url_string, "//article//p//a")[1..-1]  #pulls website and event_title into each node AND removes non-event items
 
-dates_and_locations = scrape(emilys_URL, "//article//p//strong")  #pulls date and location info into each node
-websites_and_titles = scrape(emilys_URL, "//article//p//a")[1..-1]  #pulls website and event_title into each node AND removes non-event items
+  events_array = []
 
-events_array = []
+  #This loop creates a json object for each event, pulling from both of the parsed arrays created above
+  dates_and_locations.each_with_index do |combo_string, event_number|
 
-dates_and_locations.each_with_index do |combo_string, event_number|
+    #use regex instead?
+    date_loc_str = combo_string[8..-10]
+    event_date, event_location = date_loc_str.split("<br>\n")
+    event_date = Date.parse event_date   #transforms string to date integer
 
-  #use regex instead?
-  date_loc_str = combo_string[8..-10]
-  event_date, event_location = date_loc_str.split("<br>\n")
-  event_date = Date.parse event_date   #transforms string to date integer
+    website_title_str = websites_and_titles[event_number][9..-5]
+    event_website, event_title = website_title_str.split("\">")
 
-  website_title_str = websites_and_titles[event_number][9..-5]
-  event_website, event_title = website_title_str.split("\">")
+    #These two categories are unknown from Emily's list event URL. This information requires additional logic.
+    free = false
+    cta_type = "onsite"
 
-  #These two categories are unknown from Emily's list event URL. This information requires additional logic.
-  free = false
-  cta_type = "onsite"
-
-  event_object = {
-       "data": {
-          "type": "ctas",
-          "attributes": {
-             "title": event_title,          #String
-             "description": "",             #String
-             "free": free,                  #TrueClass
-             "start-time": event_date,      #Integer date without time
-             "end-time": event_date,        #Integer date without time
-             "cta-type": cta_type,          #String ("onsite" or "phone")
-             "website": event_website       #String
-           },
-           "relationships": {
-             "location": {
-               "data": { "type": "locations", "id": event_location } #String
+    event_object = {
+         "data": {
+            "type": "ctas",
+            "attributes": {
+               "title": event_title,          #String
+               "description": "",             #String
+               "free": free,                  #TrueClass
+               "start-time": event_date,      #Integer date without time
+               "end-time": event_date,        #Integer date without time
+               "cta-type": cta_type,          #String ("onsite" or "phone")
+               "website": event_website       #String
              },
-             "contact": {
-               "data": { "type": "contacts", "id": "" }
-             },
-             "call-script": {
-               "data": { "type": "call-scripts", "id": "" }
+             "relationships": {
+               "location": {
+                 "data": { "type": "locations", "id": event_location } #String
+               },
+               "contact": {
+                 "data": { "type": "contacts", "id": "" }
+               },
+               "call-script": {
+                 "data": { "type": "call-scripts", "id": "" }
+               }
              }
-           }
+          }
         }
-      }
 
-    events_array << event_object
+      events_array << event_object
+  end #of dates_and_locations loop
+
+  events_array
 end
 
 
-puts events_array
+emilys_URL = "http://www.emilyslist.org/pages/entry/events"
+puts pull_event_data(emilys_URL)
+
+
+
+
+
 
 
 
