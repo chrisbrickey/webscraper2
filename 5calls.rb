@@ -23,7 +23,7 @@ end
 fivecalls_issues_URL_94108 = "https://5calls.org/issues/?address=94108"   #discovered with devtools, XHR filter
 fivecalls_issues_URL_prefix = "https://5calls.org/issues/?address="   #discovered with devtools, XHR filter
 
-puts generate_url_array(fivecalls_issues_URL_prefix, "us_postal_codes.csv")
+puts generate_url_array(fivecalls_issues_URL_prefix, "reference/us_postal_codes.csv")
 #NEXT STEP: Find live source of up-to-date zipcodes (currently pullig from unofficial 2012 source: https://www.aggdata.com/node/86)
 #NEXT STEP: Figure out more efficient way of getting to discrete list of CTAs (lots of overlap among zipcodes)
 
