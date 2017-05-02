@@ -1,0 +1,79 @@
+Below is the format for creating a new CTA per rake tests of cta-aggregator
+
+"""
+{
+  "data": {
+     "type": "ctas",
+     "attributes": {
+        "title": "foobar",
+        "description": "Lorem ipsum",
+        "free": true,
+        "start-time": "1526725814",
+        "end-time": "1526740214",
+        "cta-type": "phone",
+        "website": "www.example.com"
+      }
+   }
+}
+"""
+
+
+Below is example of how new event might be added (per cta-aggregator-docs repo)
+...order is a different than above
+
+curl -X POST "http://localhost:3000/v1/events"
+  -H "Accept: application/vnd.api+json"
+  -H "Content-Type: application/vnd.api+json"
+  -d ' {
+    "data": {
+      "type": "events",
+        "attributes": {
+          "title": "pizza pizza pizza",
+          "description": "desc",
+          "free": true,
+          "website": "www.example.com",
+          "event-type": "onsite",
+          "start-time": "1526725814",
+          "end-time": "1526740214"
+        }
+    }
+  }'
+
+
+
+
+Below is example of how data will be returned to user when requested from API (per cta-aggregator-docs repo)
+
+
+{
+  "data": [
+    {
+      "id": "a94af705-c389-4c33-8b25-e35a42062949",
+      "type": "events",
+      "links": {
+        "self": "http://localhost:3000/v1/events/a94af705-c389-4c33-8b25-e35a42062949"
+      },
+      "attributes": {
+        "title": "occaecat sed nulla ea consectetur",
+        "description": "magna adipiscing id aute consectetur ut incididunt mollit non Duis dolore elit reprehenderit laboris sed dolore Excepteur ut est nostrud officia deserunt ipsum sunt culpa",
+        "free": false,
+        "start-time": 1526236740,
+        "end-time": 1526247540,
+        "event-type": "onsite",
+        "website": "www.consectetur.com"
+      },
+      "relationships": {
+        "location": {
+          "links": {
+            "self": "http://localhost:3000/v1/events/a94af705-c389-4c33-8b25-e35a42062949/relationships/location",
+            "related": "http://localhost:3000/v1/events/a94af705-c389-4c33-8b25-e35a42062949/location"
+          }
+        },
+        "contact": {
+          "links": {
+            "self": "http://localhost:3000/v1/events/a94af705-c389-4c33-8b25-e35a42062949/relationships/contact",
+            "related": "http://localhost:3000/v1/events/a94af705-c389-4c33-8b25-e35a42062949/contact"
+          }
+        }
+      }
+    },
