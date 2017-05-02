@@ -1,6 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
-
+require 'json'
 
 #Parameters must be in string format e.g. ("http://www.testing123.com", "//outertag//innertag")
 def scrape (url_string, tag_pattern)
@@ -44,12 +44,14 @@ def pull_event_data (url_string)
     free = false
     cta_type = "onsite"
 
+    #NEXT STEP: Go into each URL and pull additional information, including description
+
     event_object = {
          "data": {
             "type": "ctas",
             "attributes": {
                "title": event_title,          #String
-               "description": "",             #String
+               "description": "description",  #String (cannot be empty string to create new CTA)
                "free": free,                  #TrueClass
                "start-time": event_date,      #Integer date without time
                "end-time": event_date,        #Integer date without time
@@ -70,7 +72,8 @@ def pull_event_data (url_string)
           }
         }
 
-      events_array << event_object
+      events_array << event_object.to_json
+      #NEXT STEP: make sure date maintains integer format when converted to json object
   end
 
   events_array
