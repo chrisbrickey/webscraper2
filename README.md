@@ -17,7 +17,9 @@ Ruby version 2.4.0p0
 
 
 ## Upcoming Features
-* Make sure outputs (JSON event objects) can be passed as input to CTA Aggregator API
-* Use mechanize to pass in forms when required
+* Upgrade Emily's List scraper to pull data from individual event URLs
+* Parse the hashes pulled from 5calls.org into json objects
+* Confirm again that outputs (JSON event objects from both executables) can be passed as input to CTA Aggregator API
+* Streamline process of pulling data from zipcodes - eliminate duplicates from looping through zipcode array and/or use mechanize to pass in forms when required
 * Incorporate regular expressions to make parsing less clunky
 * Use spooky.js for sites that use Ajax - Nokogiri won't work alone
