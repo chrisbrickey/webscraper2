@@ -21,11 +21,12 @@ def scrape (url_string, tag_pattern)
   parsed_array
 end
 
-
-def pull_event_data (url_string) #used to have a second parameter (parsed_array) but I think that was superfluous
+#this is specific to emily's list because of the tags it is directed to pull
+def pull_event_data (url_string)
   dates_and_locations = scrape(url_string, "//article//p//strong")  #pulls date and location info into each node
   websites_and_titles = scrape(url_string, "//article//p//a")[1..-1]  #pulls website and event_title into each node AND removes non-event items
 
+  #per JSON API spec, resources must be represented as an array
   events_array = []
 
   #This loop creates a json object for each event, pulling from both of the parsed arrays created above
@@ -70,7 +71,7 @@ def pull_event_data (url_string) #used to have a second parameter (parsed_array)
         }
 
       events_array << event_object
-  end #of dates_and_locations loop
+  end
 
   events_array
 end

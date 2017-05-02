@@ -2,8 +2,7 @@
 require 'nokogiri'
 #lets us use the 'open' method that does all the work of making the HTTP request to get the raw HTML. 'restclient' is an alternative to open-uri
 require 'open-uri'
-
-#lets us pull data from CSV file
+#lets us pull data from CSV file (zip codes are in this format)
 require 'csv'
 
 #both parameters must be in string format
@@ -21,8 +20,8 @@ def generate_url_array(url_prefix, csv_source)
 end
 
 
-#how_many_zipcodes dictates the number of zipcode URLs that will be scraped
-def scrape (url_array, how_many_zipcodes)
+
+def scrape (url_array, how_many_zipcodes) #how_many_zipcodes dictates the number of zipcode URLs that will be scraped
 
   truncated_url_array = url_array[0..(how_many_zipcodes - 1)]
 
@@ -32,7 +31,6 @@ def scrape (url_array, how_many_zipcodes)
     #NEXT STEP: find an alternative method for scraping that produces a node set with multiple nodes (instead of everything lumped into one)
     scraped_object = Nokogiri::HTML(open(url))
     parsed_node_set = scraped_object.css("p") #all content is within <p> tags and no CSS styling
-    #NEXT STEP: loop through each node (because multiple events within each node)
     #NEXT STEP: create JSON object for each event
     events_array << parsed_node_set
   end
@@ -42,8 +40,8 @@ end
 
 
 fivecalls_issues_URL_prefix = "https://5calls.org/issues/?address="  #discovered with devtools, XHR filter
-fivecalls_url_array = generate_url_array("https://5calls.org/issues/?address=", "reference/us_postal_codes.csv")
+fivecalls_url_array = generate_url_array(fivecalls_issues_URL_prefix, "reference/us_postal_codes.csv")
+puts scrape(fivecalls_url_array, 1) #NEXT STEP get how_many_zipcodes param from ARGV
+
 #NEXT STEP: Find live source of up-to-date zipcodes (currently pullig from unofficial 2012 source: https://www.aggdata.com/node/86)
 #NEXT STEP: Figure out more efficient way of getting to discrete list of CTAs (lots of overlap among zipcodes)
-
-puts scrape(fivecalls_url_array, 1)
