@@ -21,6 +21,35 @@ def scrape (url_string, tag_pattern)
   parsed_array
 end
 
+def format(event_title, free, event_date, cta_type, event_website, event_location)
+
+  event_object = {
+       "data": {
+          "type": "ctas",
+          "attributes": {
+             "title": event_title,          #String
+             "description": "description",  #String (cannot be empty string to create new CTA)
+             "free": free,                  #TrueClass
+             "start-time": event_date,      #Integer date without time
+             "end-time": event_date,        #Integer date without time
+             "cta-type": cta_type,          #String ("onsite" or "phone")
+             "website": event_website       #String
+           },
+           "relationships": {
+             "location": {
+               "data": { "type": "locations", "id": event_location } #String
+             },
+             "contact": {
+               "data": { "type": "contacts", "id": "" }
+             },
+             "call-script": {
+               "data": { "type": "call-scripts", "id": "" }
+             }
+          }
+      }
+  }
+end
+
 #this is specific to emily's list because of the tags it is directed to pull
 def pull_event_data (url_string)
   dates_and_locations = scrape(url_string, "//article//p//strong")  #pulls date and location info into each node
@@ -42,38 +71,10 @@ def pull_event_data (url_string)
 
     #These two categories are unknown from Emily's list event URL. This information requires additional logic.
     free = false
-    cta_type = "onsite"
-
+    cta_type = "onsite"    
+    events_array << format(event_title, free, event_date, cta_type, event_website, event_location).to_json
+    #NEXT STEP: make sure date maintains integer format when converted to json object
     #NEXT STEP: Go into each URL and pull additional information, including description
-
-    event_object = {
-         "data": {
-            "type": "ctas",
-            "attributes": {
-               "title": event_title,          #String
-               "description": "description",  #String (cannot be empty string to create new CTA)
-               "free": free,                  #TrueClass
-               "start-time": event_date,      #Integer date without time
-               "end-time": event_date,        #Integer date without time
-               "cta-type": cta_type,          #String ("onsite" or "phone")
-               "website": event_website       #String
-             },
-             "relationships": {
-               "location": {
-                 "data": { "type": "locations", "id": event_location } #String
-               },
-               "contact": {
-                 "data": { "type": "contacts", "id": "" }
-               },
-               "call-script": {
-                 "data": { "type": "call-scripts", "id": "" }
-               }
-             }
-          }
-        }
-
-      events_array << event_object.to_json
-      #NEXT STEP: make sure date maintains integer format when converted to json object
   end
 
   events_array
