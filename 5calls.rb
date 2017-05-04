@@ -6,13 +6,12 @@ require 'open-uri'
 require 'csv'
 require 'json'
 
-#both parameters must be in string format
-def generate_url_array(url_prefix, csv_source)
+
+
+def generate_url_array(url_prefix, csv_source)      #both parameters must be in string format
 
   url_array = []
-
-  #NEXT STEP: edit this so can control how many urls to generate at this point (instead of in the subsequent method)
-  CSV.foreach(csv_source) do |row|
+  CSV.foreach(csv_source) do |row|          #NEXT STEP: edit this so can control how many urls to generate at this point (instead of in the subsequent method)
     url_string = url_prefix + "#{row[0]}"
     url_array << url_string
   end
@@ -21,28 +20,36 @@ def generate_url_array(url_prefix, csv_source)
 end
 
 
-#NEXT STEP: determine whether or not multiple zipcodes need to be called if we disregard contact info (maybe just use one zipcode)
+
 def scrape (url_array, how_many_zipcodes) #how_many_zipcodes dictates the number of zipcode URLs that will be scraped
 
   truncated_url_array = url_array[0..(how_many_zipcodes - 1)]
-
   events_array = []
 
   truncated_url_array.each do |url|
-    #NEXT STEP: find an alternative method for scraping that produces a node set with multiple nodes (instead of everything lumped into one)
-    scraped_object = Nokogiri::HTML(open(url))
-    parsed_node_set = scraped_object.css("p") #all content is within <p> tags and no CSS styling
-    #NEXT STEP: remove duplicates (multiple zipcodes cover one representative)
-    #NEXT STEP: create formatted hash for each event
-    events_array << parsed_node_set.to_json
+    scraped_object = Nokogiri::HTML(open(url))    #scraped_object.attribute_nodes => nothing
+    parsed_node_set = scraped_object.css("p")     #all content is within <p> tags and no CSS styling, currently only one node
+
+    #NEXT STEP: PARSE DATA AND CREATE FORMATTED HASH FOR EACH EVENT
+    target_element = parsed_node_set[0]   #the class of this single element is "Nokogiri::XML::Element"
+                                          # parsed_node_set.attribute("issues") => nothing
+                                          # target_element.content => strips the p-tags and returns a giant string that I can't use like a hash; eval(target_element.content) does not work
+                                          # target_element.text["issues"] => "issues"; acting like a string, not a hash
+                                          # target_element.attribute_nodes => nothing
+
+    events_array << target_element
   end
 
   events_array
 end
 
 
+
 fivecalls_issues_URL_prefix = "https://5calls.org/issues/?address="  #discovered with devtools, XHR filter
 fivecalls_url_array = generate_url_array(fivecalls_issues_URL_prefix, "reference/us_postal_codes.csv")
-puts scrape(fivecalls_url_array, 1) #NEXT STEP structure zipcodes into arrays by state or region
+puts scrape(fivecalls_url_array, 1)
 
+
+#NEXT STEP: determine whether or not multiple zipcodes need to be called if we disregard contact info (maybe just use one zipcode)
+#NEXT STEP structure zipcodes into arrays by state or region
 #NEXT STEP: Find live source of up-to-date zipcodes (currently pullig from unofficial 2012 source: https://www.aggdata.com/node/86)
