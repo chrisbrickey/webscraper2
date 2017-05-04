@@ -13,7 +13,7 @@ Ruby version 2.4.0p0
 ## Setup
 * Run Emily's List scraper from terminal: `ruby emilyslist.rb`
 * Run 5calls.org scraper from terminal: `ruby 5calls.rb`
-* See reference folder for guidance on nokogiri HTML selectors and zipcode source
+* See reference folder for guidance on nokogiri HTML selectors and zipcode source, among other things
 
 
 ## Upcoming Features
