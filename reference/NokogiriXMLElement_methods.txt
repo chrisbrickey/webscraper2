@@ -1,0 +1,10 @@
+source: http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Element
+
+Methods inherited from Node
+#<<, #<=>, #==, #>, #[], #[]=, #accept, #add_child, #add_namespace_definition, #add_next_sibling, #add_previous_sibling, #after, #ancestors, #attribute, #attribute_nodes, #attribute_with_ns, #attributes, #before, #blank?, #canonicalize, #cdata?, #child, #children, #children=, #comment?, #content, #content=, #create_external_subset, #create_internal_subset, #css_path, #decorate!, #default_namespace=, #description, #do_xinclude, #document, #document?, #dup, #each, #element?, #element_children, #encode_special_chars, #external_subset, #first_element_child, #fragment, #fragment?, #html?, #initialize, #inner_html, #inner_html=, #internal_subset, #key?, #keys, #lang, #lang=, #last_element_child, #line, #matches?, #namespace, #namespace=, #namespace_definitions, #namespace_scopes, #namespaced_key?, #namespaces, #native_content=, new, #next_element, #next_sibling, #node_name, #node_name=, #node_type, #parent, #parent=, #parse, #path, #pointer_id, #prepend_child, #previous_element, #previous_sibling, #processing_instruction?, #read_only?, #remove_attribute, #replace, #serialize, #swap, #text?, #to_html, #to_s, #to_xhtml, #to_xml, #traverse, #unlink, #values, #write_html_to, #write_to, #write_xhtml_to, #write_xml_to, #xml?
+
+Methods included from Searchable
+#at, #at_css, #at_xpath, #css, #search, #xpath
+
+Methods included from PP::Node
+#inspect, #pretty_print
