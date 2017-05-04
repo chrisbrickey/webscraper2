@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'json'
 
+
 #Parameters must be in string format e.g. ("http://www.testing123.com", "//outertag//innertag")
 def scrape (url_string, tag_pattern)
 
@@ -20,6 +21,7 @@ def scrape (url_string, tag_pattern)
 
   parsed_array
 end
+
 
 def format(event_title, free, event_date, cta_type, event_website, event_location)
 
@@ -69,12 +71,15 @@ def pull_event_data (url_string)
     website_title_str = websites_and_titles[event_number][9..-5]
     event_website, event_title = website_title_str.split("\">")
 
+    #NEXT STEP: Go into each URL and pull additional information, including description
+
+
     #These two categories are unknown from Emily's list event URL. This information requires additional logic.
     free = false
-    cta_type = "onsite"    
+    cta_type = "onsite"
     events_array << format(event_title, free, event_date, cta_type, event_website, event_location).to_json
     #NEXT STEP: make sure date maintains integer format when converted to json object
-    #NEXT STEP: Go into each URL and pull additional information, including description
+
   end
 
   events_array
@@ -83,9 +88,6 @@ end
 
 emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 puts pull_event_data(emilys_URL)
-
-
-
 
 
 
