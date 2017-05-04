@@ -52,6 +52,7 @@ def format(event_title, free, event_date, cta_type, event_website, event_locatio
   }
 end
 
+
 #this is specific to emily's list because of the tags it is directed to pull
 def pull_event_data (url_string)
   dates_and_locations = scrape(url_string, "//article//p//strong")  #pulls date and location info into each node
