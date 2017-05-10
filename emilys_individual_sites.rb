@@ -1,28 +1,13 @@
-require 'nokogiri'
-require 'open-uri'
+require 'nokogiri' #also required by ScrapeEventURLs module
+require 'open-uri' #also required by ScrapeEventURLs module
 require 'json'
 require 'csv'
+require "./scrape_event_urls.rb"
+include ScrapeEventURLs
 
 
-# EVENT 1
-data_from_event_url1 = Nokogiri::HTML(open("http://www.emilyslist.org/2017"))  #only 1 upcoming event
-parsed_from_url1 = data_from_event_url1.css("section")
-
-CSV.open('raw_data/event1_raw.csv', 'w') do |csv|
-  csv << parsed_from_url1
-end
-
-
-# EVENT 2 (confirmed that html is in same format as event 1...upcoming events)
-data_from_event_url2 = Nokogiri::HTML(open("http://www.flickr.com/photos/emilyslist/sets/72157679761839052"))  #all other events are in the past and stored at flickr
-parsed_from_url2 = data_from_event_url1.css("section")
-
-
-CSV.open('raw_data/event2_raw.csv', 'w') do |csv|
-  csv << parsed_from_url2
-end
-
-
-
-#NEXT STEPS:
-#Parse from individual event URLs instead of main page
+#create array of event URLs from Emily's list:
+main_URL = "http://www.emilyslist.org/pages/entry/events"
+event_urls_tag_pattern = "//article//p//a/@href"
+emilys_url_array = ScrapeEventURLs.create(main_URL, event_urls_tag_pattern)[1..-1] #0th element is NOT an event
+puts emilys_url_array
