@@ -5,7 +5,7 @@ require 'open-uri'
 #lets us pull data from CSV file (zip codes are in this format)
 require 'csv'
 require 'json'
-
+require 'pry'
 
 
 def generate_url_array(url_prefix, csv_source)      #both parameters must be in string format
@@ -36,7 +36,7 @@ def scrape (url_array, how_many_zipcodes) #how_many_zipcodes dictates the number
                                           # target_element.content => strips the p-tags and returns a giant string that I can't use like a hash; eval(target_element.content) does not work
                                           # target_element.text["issues"] => "issues"; acting like a string, not a hash
                                           # target_element.attribute_nodes => nothing
-
+    binding.pry
     events_array << target_element
   end
 
