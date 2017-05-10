@@ -1,3 +1,4 @@
+#this program parses only from the main url of emilys list; it is a precursor to the files that scrape individual event URLs
 require 'nokogiri'
 require 'open-uri'
 require 'json'
