@@ -11,12 +11,14 @@ Ruby version 2.4.0p0
 
 
 ## Setup
-* Run Emily's List scraper from terminal: `ruby emilyslist.rb`
+* Run Emily's List scraper (scrapes individual event URLs) from terminal: `ruby emilys_individual_sites.rb`
+* Run Emily's List main page scraper from terminal: `ruby emilys_main_url_parser.rb` (this scraper broke in early May 2017 when EmilysList main page changed HTML formatting)
 * Run 5calls.org scraper from terminal: `ruby 5calls.rb`
 * See reference folder for guidance on nokogiri HTML selectors and zipcode source, among other things
 
 
 ## Upcoming Features
+* Correct issues created by using .to_json (changes integer dates back to strings)
 * Upgrade Emily's List scraper to pull data from individual event URLs
 * Parse the hashes pulled from 5calls.org into json objects
 * Confirm again that outputs (JSON event objects from both executables) can be passed as input to CTA Aggregator API
