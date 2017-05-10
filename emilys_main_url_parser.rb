@@ -24,14 +24,14 @@ def scrape (url_string, tag_pattern)
 end
 
 
-def format(event_title, free, event_date, cta_type, event_website, event_location)
+def format(event_title, description, free, event_date, cta_type, event_website, event_location)
 
   event_object = {
        "data": {
           "type": "ctas",
           "attributes": {
              "title": event_title,          #String
-             "description": "description",  #String (cannot be empty string to create new CTA)
+             "description": description,  #String (cannot be empty string to create new CTA)
              "free": free,                  #TrueClass
              "start-time": event_date,      #Integer date without time
              "end-time": event_date,        #Integer date without time
@@ -77,9 +77,11 @@ def pull_event_data (url_string)
 
 
     #These two categories are unknown from Emily's list event URL. This information requires additional logic.
+    description = "description" #can't be an empty string for CTA aggregator
     free = false
     cta_type = "onsite"
-    events_array << format(event_title, free, event_date, cta_type, event_website, event_location).to_json
+
+    events_array << format(event_title, description, free, event_date, cta_type, event_website, event_location).to_json
     #NEXT STEP: make sure date maintains integer format when converted to json object
 
   end
