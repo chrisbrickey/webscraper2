@@ -1,63 +1,22 @@
 #this program parses only from the main url of emilys list; it is a precursor to the files that scrape individual event URLs
+#this program broke in early May 2017 because Emily's list changed their HTML pattern for events on the main page
+
 require 'nokogiri'
 require 'open-uri'
-require 'json'
+require 'json'          #required by CreateJsonObject
 
 
-#Parameters must be in string format e.g. ("http://www.testing123.com", "//outertag//innertag")
-def scrape (url_string, tag_pattern)
+require "./scrape_event_urls.rb"
+include ScrapeEventURLs
 
-  #scrapes entire HTML document and places it in a Nokogiri object (requires 'nokogiri' and 'open-uri')
-  scraped_object = Nokogiri::HTML(open(url_string))
-
-  #filters the scraped_object and stores it into a node set
-  #tag_patterns are ideally specified to pull multiple items (e.g. multiple <p></p> that match the same condition) which result in an array of many items
-  parsed_node_set = scraped_object.css(tag_pattern)
-
-  parsed_array = []
-  #converts nodeset to array of strings
-  parsed_node_set.each do |element|
-    parsed_array << element.to_s
-  end
-
-  parsed_array
-end
+require './create_json_object'
+include CreateJsonObject
 
 
-def format(event_title, description, free, event_date, cta_type, event_website, event_location)
+def pull_emily_main_page_data (url_string, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
+  dates_and_locations = ScrapeEventURLs.create(url_string, dates_and_location_tag_pattern)          #pulls date and location info into each node
+  websites_and_titles = ScrapeEventURLs.create(url_string, websites_and_titles_tag_pattern)[1..-1]  #pulls website and event_title into each node AND removes non-event items
 
-  event_object = {
-       "data": {
-          "type": "ctas",
-          "attributes": {
-             "title": event_title,          #String
-             "description": description,  #String (cannot be empty string to create new CTA)
-             "free": free,                  #TrueClass
-             "start-time": event_date,      #Integer date without time
-             "end-time": event_date,        #Integer date without time
-             "cta-type": cta_type,          #String ("onsite" or "phone")
-             "website": event_website       #String
-           },
-           "relationships": {
-             "location": {
-               "data": { "type": "locations", "id": event_location } #String
-             },
-             "contact": {
-               "data": { "type": "contacts", "id": "" }
-             },
-             "call-script": {
-               "data": { "type": "call-scripts", "id": "" }
-             }
-          }
-      }
-  }
-end
-
-
-#this is specific to emily's list because of the tags it is directed to pull
-def pull_event_data (url_string)
-  dates_and_locations = scrape(url_string, "//article//p//strong")  #pulls date and location info into each node
-  websites_and_titles = scrape(url_string, "//article//p//a")[1..-1]  #pulls website and event_title into each node AND removes non-event items
 
   #per JSON API spec, resources must be represented as an array
   events_array = []
@@ -73,42 +32,42 @@ def pull_event_data (url_string)
     website_title_str = websites_and_titles[event_number][9..-5]
     event_website, event_title = website_title_str.split("\">")
 
-    #NEXT STEP: Go into each URL and pull additional information, including description
-
 
     #These two categories are unknown from Emily's list event URL. This information requires additional logic.
     description = "description" #can't be an empty string for CTA aggregator
     free = false
     cta_type = "onsite"
 
-    events_array << format(event_title, description, free, event_date, cta_type, event_website, event_location).to_json
-    #NEXT STEP: make sure date maintains integer format when converted to json object
-
+    #event_date is used for both start and end  time because no times given
+    events_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location)
   end
 
   events_array
 end
 
 
+
+
+#emilys list parameters for pull from main event page, hard-coded in below method
 emilys_URL = "http://www.emilyslist.org/pages/entry/events"
-puts pull_event_data(emilys_URL)
+dates_and_location_tag_pattern = "//article//p//strong"
+websites_and_titles_tag_pattern = "//article//p//a"
+
+
+final_object_emilys_main_url = pull_emily_main_page_data(emilys_URL, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
+puts final_object_emilys_main_url
 
 
 
 
 
-#NEXT STEPS:
-#Try to pull each event into a node (article/p) FIRST and then use a loop to breakdown each element into four components to avoid data points getting associated with wrong event
-
-#Setup a class for target sites.  Each instance will have a unique URL and tag patterns for event name, contact, date, etc. Then the scrape method can be called on each instance to produce an input to the API.
-#An interim step might be to just make a hash that maps URLs to tag_patterns so can loop through multiple tag_patterns for each URL
-#e.g. url_map = { "http://www.emilyslist.org/pages/entry/events" => ["//article//p", _____, _____] }
-
-#See this page for how to assign specific tags based on the URL: http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html
-#doc.css('//car:tire', 'car' => 'http://alicesautoparts.com/')
+#below is my attempt to isolate the dates AFTER everything is converted to JSON object
+#...in hopes of returning the dates to integer format...not yet solved
+    # event1 = pull_event_data(emilys_URL)[0]
+    # event1_date = JSON.getJSONObject("data").getJSONObject("attributes").getString("end-time")  #computer not recognizing this syntax
 
 
-
+#=============================OLD CODE============================
 #Emily's list full target tag: <article id="content" class="base main-content" role="main">
   # <p><strong>Wednesday, May 3, 2017<br />
   # Washington, DC</strong><br />
@@ -134,3 +93,33 @@ puts pull_event_data(emilys_URL)
   #   "temp_ID":      event_number,   #Integer
   #   "location":     event_location  #String
   # }
+
+
+  # def format(event_title, description, free, event_date, cta_type, event_website, event_location)
+  #
+  #   event_object = {
+  #        "data": {
+  #           "type": "ctas",
+  #           "attributes": {
+  #              "title": event_title,          #String
+  #              "description": description,  #String (cannot be empty string to create new CTA)
+  #              "free": free,                  #TrueClass
+  #              "start-time": event_date,      #Integer date without time
+  #              "end-time": event_date,        #Integer date without time
+  #              "cta-type": cta_type,          #String ("onsite" or "phone")
+  #              "website": event_website       #String
+  #            },
+  #            "relationships": {
+  #              "location": {
+  #                "data": { "type": "locations", "id": event_location } #String
+  #              },
+  #              "contact": {
+  #                "data": { "type": "contacts", "id": "" }
+  #              },
+  #              "call-script": {
+  #                "data": { "type": "call-scripts", "id": "" }
+  #              }
+  #           }
+  #       }
+  #   }
+  # end
