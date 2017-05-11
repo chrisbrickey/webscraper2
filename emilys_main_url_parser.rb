@@ -6,7 +6,7 @@ require 'open-uri'
 require 'json'          #required by CreateJsonObject
 
 
-require "./scrape_event_urls.rb"
+require './scrape_event_urls'
 include ScrapeEventURLs
 
 require './create_json_object'
