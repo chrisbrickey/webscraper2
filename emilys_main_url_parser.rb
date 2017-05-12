@@ -37,9 +37,10 @@ def pull_emily_main_page_data (url_string, dates_and_location_tag_pattern, websi
     description = "description" #can't be an empty string for CTA aggregator
     free = false
     cta_type = "onsite"
+    call_script = "none"
 
     #event_date is used for both start and end  time because no times given
-    events_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location)
+    events_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location, call_script)
   end
 
   events_array
