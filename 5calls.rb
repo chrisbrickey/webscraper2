@@ -12,7 +12,7 @@ include CreateJsonObject
 
 
 
-#========BELOW CODE PULLS 5CALLS DATA FROM ONE ZIP CODE BECAUSE CONTACTS (LOCAL REPS) IS NOT YET REQUIRED===========
+#========BELOW CODE PULLS 5CALLS DATA FROM ONE ZIP CODE BECAUSE CONTACTS (LOCAL REPS) ARE NOT YET REQUIRED===========
 
 def pull_json_from_url(url, tag_pattern)
   scraped_object = ScrapeEventURLs.scrape(url)    #scraped_object.attribute_nodes => nothing
@@ -20,9 +20,48 @@ def pull_json_from_url(url, tag_pattern)
 end
 
 
+def parse_json(parsed_node_set)
+  unparsed_issue_array = JSON.parse(parsed_node_set.text)["issues"]   #if not working try parsed_node_set[0], only one element in the set
+  parsed_issue_array = []
+
+  unparsed_issue_array.each do |issue|
+
+    event_title = issue["name"]
+    description = issue["reason"]
+
+    #Below categories are not specified in the 5calls data, so I'm setting these as defaults for 5calls CTAs.
+    free = true
+    event_date = "nil"      #using string until I make sure JSON transformer can accept nil; this represents start_time and end_time
+    cta_type = "phone"
+
+    #website depends on users zipcode so for now I'm sending them to main 5calls site which picks up location
+    #if we start uploading data across multiple zip codes, this variable should be more specific
+    event_website = "https://5calls.org/"
+    event_location = "phone_only"
+
+    call_script = issue["script"]
+
+
+    parsed_issue_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location, call_script)
+  end
+
+  #this is the input to CTA AGGREGATOR - an array of json objects (one per issue)
+  parsed_issue_array
+end
+
+
+
+
 fivecalls_url_00210 = "https://5calls.org/issues/?address=00210"  #discovered with devtools, XHR filter
-puts pull_json_from_url(fivecalls_url_00210, "p")
-puts "\n=================\n"
+fivecalls_tag_pattern = "p"
+fivecalls_event_data = pull_json_from_url(fivecalls_url_00210, fivecalls_tag_pattern)
+puts parse_json(fivecalls_event_data)
+
+
+
+
+
+
 
 
 
@@ -44,14 +83,14 @@ end
 
 
 
-def scrape_across_zips (url_array, how_many_zipcodes) #how_many_zipcodes dictates the number of zipcode URLs that will be scraped
+def scrape_across_zips (url_array, how_many_zipcodes, tag_pattern) #how_many_zipcodes dictates the number of zipcode URLs that will be scraped
 
   truncated_url_array = url_array[0..(how_many_zipcodes - 1)]
   events_array = []
 
   truncated_url_array.each do |url|
-    scraped_object = Nokogiri::HTML(open(url))    #scraped_object.attribute_nodes => nothing
-    parsed_node_set = scraped_object.css("p")     #all content is within <p> tags and no CSS styling, currently only one node
+    scraped_object = ScrapeEventURLs.scrape(url)   #scraped_object.attribute_nodes => nothing
+    parsed_node_set = ScrapeEventURLs.parse_nokogiri_object(scraped_object, tag_pattern)     #all content is within <p> tags and no CSS styling, currently only one node
 
     #NEXT STEP: PARSE DATA AND CREATE FORMATTED HASH FOR EACH EVENT
     # target_element = parsed_node_set      #the class of this single element is "Nokogiri::XML::Element"
@@ -70,9 +109,8 @@ end
 
 fivecalls_url_prefix = "https://5calls.org/issues/?address="  #discovered with devtools, XHR filter
 fivecalls_url_array = generate_url_array(fivecalls_url_prefix, "reference/us_postal_codes.csv")
-
-#currently set to 1 to focus on parsing logic which is zip-code-agnostic
-puts scrape_across_zips(fivecalls_url_array, 1)
+fivecalls_tag_pattern = "p"
+# puts scrape_across_zips(fivecalls_url_array, 1, "p")    #currently set to 1 zipcode to focus on parsing logic
 
 #NEXT STEP: determine whether or not multiple zipcodes need to be called if we disregard contact info (maybe just use one zipcode)
 #NEXT STEP structure zipcodes into arrays by state or region
