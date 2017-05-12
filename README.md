@@ -11,17 +11,16 @@ Ruby version 2.4.0p0
 
 
 ## Setup
-* Run Emily's List scraper (scrapes individual event URLs) from terminal: `ruby emilys_individual_sites.rb`
-* Run Emily's List main page scraper from terminal: `ruby emilys_main_url_parser.rb` (this scraper broke in early May 2017 when EmilysList main page changed HTML formatting)
 * Run 5calls.org scraper from terminal: `ruby 5calls.rb`
+* Run Emily's List individual url scraper from terminal: `ruby emilys_individual_sites.rb` (currently broken due to website changes)
+* Run Emily's List main page scraper from terminal: `ruby emilys_main_url_parser.rb` (currently broken due to website changes)
 * See reference folder for guidance on nokogiri HTML selectors and zipcode source, among other things
 
 
 ## Upcoming Features
-* Correct issues created by using .to_json (changes integer dates back to strings)
-* Upgrade Emily's List scraper to pull data from individual event URLs
-* Parse the hashes pulled from 5calls.org into json objects
-* Confirm again that outputs (JSON event objects from both executables) can be passed as input to CTA Aggregator API
+* Confirm that outputs (JSON event objects) can be passed as input to CTA Aggregator API
+* Correct parsing issue with Emily's List scrapers caused by recent changes to website
+* Correct date issue created by using .to_json (changes integer dates back to strings)
 * Streamline process of pulling data from zipcodes - eliminate duplicates from looping through zipcode array and/or use mechanize to pass in forms when required
 * Incorporate regular expressions to make parsing less clunky
 * Use spooky.js for sites that use Ajax - Nokogiri won't work alone
