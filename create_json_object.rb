@@ -2,7 +2,7 @@ require 'json'
 
 module CreateJsonObject
 
-  def create_json_object(event_title, description, free, start_time, end_time, cta_type, event_website, event_location)
+  def create_json_object(event_title, description, free, start_time, end_time, cta_type, event_website, event_location, call_script)
 
     json_event_object = {
          "data": {
@@ -12,7 +12,7 @@ module CreateJsonObject
                "description": description,    #String (cannot be empty string to create new CTA)
                "free": free,                  #TrueClass
                "start-time": start_time,      #Integer date/time
-               "end-time": end_time,        #Integer date/time
+               "end-time": end_time,          #Integer date/time
                "cta-type": cta_type,          #String ("onsite" or "phone")
                "website": event_website       #String
              },
@@ -24,7 +24,7 @@ module CreateJsonObject
                  "data": { "type": "contacts", "id": "" }
                },
                "call-script": {
-                 "data": { "type": "call-scripts", "id": "" }
+                 "data": { "type": "call-scripts", "id": call_script }
                }
             }
         }
