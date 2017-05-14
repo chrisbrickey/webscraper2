@@ -31,7 +31,7 @@ def parse_json(parsed_node_set)
 
     #Below categories are not specified in the 5calls data, so I'm setting these as defaults for 5calls CTAs.
     free = true
-    event_date = "nil"      #using string until I make sure JSON transformer can accept nil; this represents start_time and end_time
+    event_date = "0000-00-00 00:00:00"      #using Unix time epoch; this represents start_time and end_time
     cta_type = "phone"
 
     #website depends on users zipcode so for now I'm sending them to main 5calls site which picks up location
@@ -39,7 +39,7 @@ def parse_json(parsed_node_set)
     event_website = "https://5calls.org/"
     event_location = "phone_only"
 
-    call_script = issue["script"]
+    call_script = issue["script"]   #this is not accepted as-is via postman, open issue
 
 
     parsed_issue_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location, call_script)
