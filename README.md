@@ -18,9 +18,12 @@ Ruby version 2.4.0p0
 
 
 ## Upcoming Features
-* Confirm that outputs (JSON event objects) can be passed as input to CTA Aggregator API
+* Determine whether or not 5calls content differs by zip code.  If not, don't loop through zip codes.
+* Separate outputs into two groups: data needed to create CTA and data needed to create resources that add details to those CTAs. See guidance from cta-aggregator-client README
 * Correct parsing issue with Emily's List scrapers caused by recent changes to website
 * Correct date issue created by using .to_json (changes integer dates back to strings)
+* Confirm that outputs (JSON event objects) can be passed as input to CTA Aggregator API by using Postman or locally running cta-aggregator (via cta-aggregator-client).
+* Add method calls to get the scrapers creating and editing CTA calls with a locally running cta-aggregator.  See guidance in "/reference/cta_aggregator_client_REFERENCE" and cta-aggregator-client README
 * Streamline process of pulling data from zipcodes - eliminate duplicates from looping through zipcode array and/or use mechanize to pass in forms when required
 * Incorporate regular expressions to make parsing less clunky
 * Use spooky.js for sites that use Ajax - Nokogiri won't work alone
