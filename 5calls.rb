@@ -1,14 +1,27 @@
-require 'nokogiri'  #lets us turn the string into a nokogiri object
-require 'open-uri'  #lets us use the 'open' method that does all the work of making the HTTP request to get the raw HTML. 'restclient' is an alternative to open-uri
-require 'csv'       #lets us pull data from CSV file (zip codes are in this format)
+require 'nokogiri'  #to turn the string into a nokogiri object
+require 'open-uri'  #to use the 'open' method that does all the work of making the HTTP request to get the raw HTML. 'restclient' is an alternative to open-uri
+require 'csv'       #to pull data from CSV file (zip codes are in this format)
 require 'json'
 require 'pry'
+require 'cta_aggregator_client' #to use Ruby client to send/receive from local cta-aggregator
 
 require './scrape_event_urls'
 include ScrapeEventURLs
 
 require './create_json_object'
 include CreateJsonObject
+
+#this loop configures this file to use cta_aggregator_client (to send/receive with locally running cta-aggregator)
+# config/intitalizers/cta_aggregator_client.rb
+CTAAggregatorClient.configure do |config|
+  config.base_url = ENV['CTA_AGGREGATOR_HOST'] # => 'localhost:3000', staging url or production url
+  config.api_version = ENV['CTA_AGGREGATOR_VERSION']  # => probably 'v1'
+  config.api_key = ENV['CTA_AGGREGATOR_KEY'] # => whatever your key is
+  config.api_secret = ENV['CTA_AGGREGATOR_SECRET'] # => whatever your key is
+end
+
+
+
 
 
 
