@@ -1,0 +1,14 @@
+POST: (not GET:)   url for locally running cta-aggregator
+....usually http://localhost:3000/v1/ctas
+
+Two headers:
+Accept         application/vnd.api+json
+Content-Type   application/vnd.api+json
+
+I got the above from line 43 of cta-aggregator/features/step_definitions/common_steps.rb
+
+
+Make sure "raw" dot is selected (4 options) because you are feeding it a raw json object.
+
+Paste json object in "Body"
+Click "Send" to test it

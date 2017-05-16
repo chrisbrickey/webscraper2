@@ -1,0 +1,56 @@
+Methods you can use with cta_aggregator_client:
+
+This is from the README.md of cta_aggregator_client. Branch: feature/auth (master not yet ready)
+
+
+List all CTAs:
+    CTAAggregatorClient::CTA.list
+
+
+List upcoming CTAs:
+    CTAAggregatorClient::CTA.list(upcoming: true)
+
+
+Find a CTA (may need this for adding resources after created a CTA):
+
+    CTAAggregatorClient::CTA.find("some-uuid")
+
+    the above ("string") is the id that cta_aggregator assigned when the CTA was created
+
+
+To create (POST) a CTA., you will need to have an API Key and Secret.  Other users just email ctaaggregator@ragtag.org to get these.  I should see rake tasks in lib/tasks directory of cta_aggregator to figure out how to do this.
+
+    attributes = {
+    title: 'cool thing',
+    descrition: 'blah, blah, blah',
+    website: 'www.example.com',
+    cta_type: "onsite",
+    free: true,
+    start_time: 1524175800,
+    end_time: 1524186600,
+    location_id: "df4aec9f-2ee9-4f53-8708-d32ad2c3babb",
+    contact_id: "be7ba220-47b4-4450-b863-57b82481f2a9"
+    call_script_id: "df62fbda-93b3-4f34-8a4c-5bf84564b699"
+    }
+
+    CTAAggregatorClient::CTA.create(attributes)
+
+
+See the README.md file for examples of how to list all the resources, find resources, and create resources...which need to be done AFTER the CTA is created....
+
+
+Create Location Note/Resource: (requires key + secret)
+    attributes = {
+      addres: '123 Fake Street',
+      zipcode: '12345'
+    }
+
+    CTAAggregatorClient::Location.create(attributes)
+
+
+Create CallScript Note/Resource: (requires key + secret)
+    attributes = {
+      text: 'Hello World.'
+    }
+
+    CTAAggregatorClient::CallScript.create(attributes)
