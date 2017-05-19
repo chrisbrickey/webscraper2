@@ -1,6 +1,4 @@
-#this program parses only from the main url of emilys list; it is a precursor to the files that scrape individual event URLs
-#this program broke in early May 2017 because Emily's list changed their HTML pattern for events on the main page
-
+#this program parses only from the main url of emilys list
 require 'nokogiri'
 require 'open-uri'
 require 'json'          #required by CreateJsonObject
