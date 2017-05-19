@@ -1,0 +1,37 @@
+I use this list to compare to results from my emilys_main_url_parser.
+
+As of May 19, 2017 these are the event site URLs copied straight from browser:
+  Upcoming Events
+    https://secure.emilyslist.org/Chicago_YP17
+
+  Past events are listed out of order (url changed to flickr photo library sans event info)
+
+    May 3 2017
+    https://www.flickr.com/photos/emilyslist/albums/72157680519659093
+
+    March 31 2017
+    http://www.flickr.com/photos/emilyslist/sets/72157679761839052
+
+    April 12 2016
+    https://www.flickr.com/photos/emilyslist/albums/72157667331009666
+
+    June 6 2016
+    https://www.flickr.com/photos/emilyslist/albums/72157667112206284
+
+    July 27 2016
+    https://www.flickr.com/photos/emilyslist/sets/72157670874413362
+
+    Aug 18 2016
+    https://www.flickr.com/photos/emilyslist/sets/72157672813874795
+
+    Aug 19 2016
+    https://www.flickr.com/photos/emilyslist/albums/72157672814442545
+
+    Sept 19 2016 (this event has 2 urls)
+    https://www.flickr.com/photos/emilyslist/albums/72157674242496355
+    https://www.flickr.com/photos/emilyslist/albums/72157670886191134
+
+    Oct 7 2016
+    https://www.flickr.com/photos/emilyslist/albums/72157673711133812
+
+    Oct 9 2016 (this last event has no urls)
