@@ -13,37 +13,18 @@ require './create_json_object'
 include CreateJsonObject
 
 
-def pull_emily_main_page_data (url_string, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
-  dates_and_locations = ScrapeEventURLs.create(url_string, dates_and_location_tag_pattern)          #pulls date and location info into each node
-  websites_and_titles = ScrapeEventURLs.create(url_string, websites_and_titles_tag_pattern)[1..-1]  #pulls website and event_title into each node AND removes non-event items
+def pull_emily_event_urls (url_string, websites_and_titles_tag_pattern)
 
+  #pull website and event_title into each node AND removes non-event items
+  websites_and_titles = ScrapeEventURLs.create(url_string, websites_and_titles_tag_pattern)[1..-1]
 
-  #per JSON API spec, resources must be represented as an array
-  events_array = []
-
-  #This loop creates a json object for each event, pulling from both of the parsed arrays created above
-  dates_and_locations.each_with_index do |combo_string, event_number|
-
-    #use regex instead?
-    date_loc_str = combo_string[8..-10]
-    event_date, event_location = date_loc_str.split("<br>\n")
-    event_date = Date.parse event_date   #transforms string to date integer
-
-    website_title_str = websites_and_titles[event_number][9..-5]
-    event_website, event_title = website_title_str.split("\">")
-
-
-    #These two categories are unknown from Emily's list event URL. This information requires additional logic.
-    description = "description" #can't be an empty string for CTA aggregator
-    free = false
-    cta_type = "onsite"
-    call_script = "none"
-
-    #event_date is used for both start and end  time because no times given
-    events_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location, call_script)
+  url_array = []
+  websites_and_titles.each do |combo_string| #loop through each node
+    event_website, event_title = combo_string[9..-5].split("\">")
+    url_array << event_website
   end
 
-  events_array
+  url_array
 end
 
 
@@ -54,9 +35,56 @@ emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 dates_and_location_tag_pattern = "//article//p//strong"
 websites_and_titles_tag_pattern = "//article//p//a"
 
+puts pull_emily_event_urls(emilys_URL, websites_and_titles_tag_pattern)
 
-final_object_emilys_main_url = pull_emily_main_page_data(emilys_URL, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
-puts final_object_emilys_main_url
+# final_object_emilys_main_url = pull_emily_main_page_data(emilys_URL, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
+# puts final_object_emilys_main_url
+
+
+
+#old version that pulled all data - WORKED before websites changed
+# def pull_emily_main_page_data (url_string, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
+#   dates_and_locations = ScrapeEventURLs.create(url_string, dates_and_location_tag_pattern)          #pulls date and location info into each node
+#   websites_and_titles = ScrapeEventURLs.create(url_string, websites_and_titles_tag_pattern)[1..-1]  #pulls website and event_title into each node AND removes non-event items
+#
+#
+#   #per JSON API spec, resources must be represented as an array
+#   events_array = []
+#
+#   #This loop creates a json object for each event, pulling from both of the parsed arrays created above
+#   dates_and_locations.each_with_index do |combo_string, event_number|
+#
+#     #use regex instead?
+#     date_loc_str = combo_string[8..-10]
+#     event_date, event_location = date_loc_str.split("<br>\n")
+#     event_date = Date.parse event_date   #transforms string to date integer
+#
+#     website_title_str = websites_and_titles[event_number][9..-5]
+#     event_website, event_title = website_title_str.split("\">")
+#
+#
+#     #These two categories are unknown from Emily's list event URL. This information requires additional logic.
+#     description = "description" #can't be an empty string for CTA aggregator
+#     free = false
+#     cta_type = "onsite"
+#     call_script = "none"
+#
+#     #event_date is used for both start and end  time because no times given
+#     #omits call_script because can only be added after CTA created
+#     events_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location)
+#   end
+#
+#   events_array
+# end
+
+
+
+
+
+
+
+
+
 
 
 
