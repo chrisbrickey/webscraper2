@@ -3,8 +3,8 @@ require 'open-uri'  #to use the 'open' method that does all the work of making t
 require 'csv'       #to pull data from CSV file (zip codes are in this format)
 require 'json'
 require 'pry'
-require 'cta_aggregator_client' #to use Ruby client to send/receive from local cta-aggregator
 
+# require 'cta_aggregator_client' #to use Ruby client to send/receive from local cta-aggregator
 require './scrape_event_urls'
 include ScrapeEventURLs
 
@@ -13,12 +13,12 @@ include CreateJsonObject
 
 #this loop configures this file to use cta_aggregator_client (to send/receive with locally running cta-aggregator)
 # config/intitalizers/cta_aggregator_client.rb
-CTAAggregatorClient.configure do |config|
-  config.base_url = ENV['CTA_AGGREGATOR_HOST'] # => 'localhost:3000', staging url or production url
-  config.api_version = ENV['CTA_AGGREGATOR_VERSION']  # => probably 'v1'
-  config.api_key = ENV['CTA_AGGREGATOR_KEY'] # => whatever your key is
-  config.api_secret = ENV['CTA_AGGREGATOR_SECRET'] # => whatever your key is
-end
+# CTAAggregatorClient.configure do |config|
+#   config.base_url = ENV['CTA_AGGREGATOR_HOST'] # => 'localhost:3000', staging url or production url
+#   config.api_version = ENV['CTA_AGGREGATOR_VERSION']  # => probably 'v1'
+#   config.api_key = ENV['CTA_AGGREGATOR_KEY'] # => whatever your key is
+#   config.api_secret = ENV['CTA_AGGREGATOR_SECRET'] # => whatever your key is
+# end
 
 
 
@@ -54,8 +54,8 @@ def parse_json(parsed_node_set)
 
     call_script = issue["script"]   #this is not accepted as-is via postman, open issue
 
-
-    parsed_issue_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location, call_script)
+    #omitting call_script from initial json object because must be submitted after CTA created
+    parsed_issue_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location)
   end
 
   #this is the input to CTA AGGREGATOR - an array of json objects (one per issue)
