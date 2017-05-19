@@ -3,6 +3,9 @@ source: http://ruby.bastardsbook.com/chapters/html-parsing/
 
 To select...
 
+  a class:
+  The main difference between id and class is that many elements can have the same class. The CSS selector to select all elements of a given class is: ".the_classname_here"
+
   the <title> element
   e.g. <head><title>My webpage</title></head>
     scraped_object.css('title')
