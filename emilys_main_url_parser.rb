@@ -28,17 +28,12 @@ def pull_emily_event_urls (url_string, websites_and_titles_tag_pattern)
 end
 
 
-
-
 #emilys list parameters for pull from main event page, hard-coded in below method
 emilys_URL = "http://www.emilyslist.org/pages/entry/events"
 dates_and_location_tag_pattern = "//article//p//strong"
 websites_and_titles_tag_pattern = "//article//p//a"
 
 puts pull_emily_event_urls(emilys_URL, websites_and_titles_tag_pattern)
-
-# final_object_emilys_main_url = pull_emily_main_page_data(emilys_URL, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
-# puts final_object_emilys_main_url
 
 
 
@@ -77,13 +72,8 @@ puts pull_emily_event_urls(emilys_URL, websites_and_titles_tag_pattern)
 #   events_array
 # end
 
-
-
-
-
-
-
-
+# final_object_emilys_main_url = pull_emily_main_page_data(emilys_URL, dates_and_location_tag_pattern, websites_and_titles_tag_pattern)
+# puts final_object_emilys_main_url
 
 
 
@@ -106,49 +96,4 @@ puts pull_emily_event_urls(emilys_URL, websites_and_titles_tag_pattern)
 #LOCATION LOGIC: may not be necessary for Emily's list (most onsite), but may need to use some kind of logic to determine this for other sites
   # if event_location.split(" ").length == 0
   #   cta_type = phone
-  # end
-
-#SIMPLIFIED OBJECT STRUCTURE
-  # json_event_object = {
-  #   "title":        event_title,    #String
-  #   "description":  "",             #String
-  #   "free":         free,           #TrueClass
-  #   "start_at":     event_date,     #should be Integer but still String
-  #   "end_at":       event_date,     #should be Integer but still String
-  #   "cta_type":     cta_type,       #String ("onsite" or "phone")
-  #   "website":      event_website,  #String
-  #
-  #   #below fields are not specified in CTA aggregator
-  #   "temp_ID":      event_number,   #Integer
-  #   "location":     event_location  #String
-  # }
-
-
-  # def format(event_title, description, free, event_date, cta_type, event_website, event_location)
-  #
-  #   event_object = {
-  #        "data": {
-  #           "type": "ctas",
-  #           "attributes": {
-  #              "title": event_title,          #String
-  #              "description": description,  #String (cannot be empty string to create new CTA)
-  #              "free": free,                  #TrueClass
-  #              "start-time": event_date,      #Integer date without time
-  #              "end-time": event_date,        #Integer date without time
-  #              "cta-type": cta_type,          #String ("onsite" or "phone")
-  #              "website": event_website       #String
-  #            },
-  #            "relationships": {
-  #              "location": {
-  #                "data": { "type": "locations", "id": event_location } #String
-  #              },
-  #              "contact": {
-  #                "data": { "type": "contacts", "id": "" }
-  #              },
-  #              "call-script": {
-  #                "data": { "type": "call-scripts", "id": "" }
-  #              }
-  #           }
-  #       }
-  #   }
   # end
