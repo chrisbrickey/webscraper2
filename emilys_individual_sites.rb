@@ -30,9 +30,8 @@ def pull_emilys_event_data(event_website) #event_website must be a string
 
   event_title = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/h1")[0][7..-8]
 
-  description = "not yet pulled" #can't be an empty string for CTA aggregator
-  # description_raw = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[0]
-  # puts "description_raw: #{description_raw}"
+  description_raw = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[0]
+  description = description_raw.gsub("<p>", "").gsub("</p>", "").gsub("\r", "").gsub("\n", "")
 
   date_times_raw, location_raw = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[1].split("<br><br>")
   event_location = location_raw[2..-9].gsub("\r\n", "").gsub("<br>", ", ")
