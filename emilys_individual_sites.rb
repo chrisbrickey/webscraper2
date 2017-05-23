@@ -30,17 +30,19 @@ def pull_emilys_event_data(event_website) #event_website must be a string
 
   event_title = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/h1")[0][7..-8]
 
-  description_raw = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[0]
+  description_raw, date_location_raw = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[0..1]
   description = description_raw.gsub("<p>", "").gsub("</p>", "").gsub("\r", "").gsub("\n", "")
 
-  date_times_raw, location_raw = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[1].split("<br><br>")
-  event_location = location_raw[2..-9].gsub("\r\n", "").gsub("<br>", ", ")
+
+  date_times_raw, location_raw = date_location_raw.split("<br><br>")
+  event_location = location_raw.gsub("\r\n", "").gsub("<br>", " ").gsub("</p>", "")
 
   #Parse date and times into start_time, end_time that include date
   stripped_date_times_raw = date_times_raw.gsub("\n", "").gsub("\r", "").gsub("<p>", "")
   date_raw, both_times = stripped_date_times_raw.split("<br>")
   start_time_raw, end_time_raw = both_times.split(" - ")
   start_time, end_time = FormatDateTimeObject.format(date_raw, start_time_raw, end_time_raw)
+
 
   #These categories can't yet be pulled from the url data, so they are given assumptions based on knowledge of Emilys List events in general
   free = false
