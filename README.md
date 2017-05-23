@@ -8,9 +8,6 @@ Ruby version 2.4.0p0
 
 ## Dependencies
 * gem install nokogiri
-* gem install open-uri
-* gem install json
-* gem install date
 * gem install geokit
 * gem install timezone
 
@@ -23,6 +20,8 @@ Ruby version 2.4.0p0
 
 
 ## Upcoming Features
+* Include timezone based on location (for Emily's list)
+* Exclude past events (from Emily's List URL generator)
 * Add method calls to get the scrapers creating and editing CTA calls with a locally running cta-aggregator.  See guidance in "/reference/cta_aggregator_client_REFERENCE" and cta-aggregator-client README
 * Streamline process of pulling data from zipcodes - eliminate duplicates from looping through zipcode array and/or use mechanize to pass in forms when required
 * Incorporate regular expressions to make parsing less clunky
