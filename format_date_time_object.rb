@@ -1,8 +1,11 @@
 require 'date'
+require 'geokit'
+require 'timezone'
+
 
 module FormatDateTimeObject
 
-  def format(date_raw, start_time_raw, end_time_raw)
+  def format(date_raw, start_time_raw, end_time_raw, event_location)
 
     date_string = Date.parse(date_raw)
 
@@ -17,6 +20,12 @@ module FormatDateTimeObject
 
       start_time_raw += " #{meridiem}"
     end
+
+
+    #determine timezone from location...incomplete
+    lat_long = Geokit::Geocoders::GoogleGeocoder.geocode(event_location)
+    timezone = Timezone::Zone.new(:latlon => lat_long.ll)
+
 
     start_time_24hr = DateTime.parse(start_time_raw).strftime("%H:%M")
     end_time_24hr = DateTime.parse(end_time_raw).strftime("%H:%M")
