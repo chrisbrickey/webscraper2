@@ -35,31 +35,35 @@ end
 
 def parse_json(parsed_node_set)
   unparsed_issue_array = JSON.parse(parsed_node_set.text)["issues"]   #if not working try parsed_node_set[0], only one element in the set
+
+  parsed_location_array = []
+  parsed_script_array = []
   parsed_issue_array = []
 
   unparsed_issue_array.each do |issue|
-
     event_title = issue["name"]
     description = issue["reason"]
-
-    #Below categories are not specified in the 5calls data, so I'm setting these as defaults for 5calls CTAs.
-    free = true
-    event_date = "0000-00-00 00:00:00"      #using Unix time epoch; this represents start_time and end_time
-    cta_type = "phone"
+    call_script = issue["script"]
 
     #website depends on users zipcode so for now I'm sending them to main 5calls site which picks up location
     #if we start uploading data across multiple zip codes, this variable should be more specific
     event_website = "https://5calls.org/"
-    event_location = "phone"  #per cta-aggregator model requirements
 
-    call_script = issue["script"]   #this is not accepted as-is via postman, open issue
+    #Below categories are not specified in the 5calls data, so I set these as defaults for 5calls CTAs.
+    free = true
+    event_date = "0000-00-00 00:00:00"      #using Unix time epoch; this represents start_time and end_time; ok for now - may change based on OSDI requirements
+    cta_type = "phone"
+    event_location = "phone"
 
-    #omitting call_script from initial json object because must be submitted after CTA created
-    parsed_issue_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website, event_location)
+    #for use AFTER initial CTA created
+    parsed_location_array << event_location
+    parsed_script_array << call_script
+
+    #omitting past events is not relevant for 5calls (no date)
+    parsed_issue_array << CreateJsonObject.create_json_object(event_title, description, free, event_date, event_date, cta_type, event_website)
   end
 
-  #this is the input to CTA AGGREGATOR - an array of json objects (one per issue)
-  parsed_issue_array
+  parsed_issue_array  #this is the input to CTA AGGREGATOR - an array of json objects (one per issue) used to create initial CTAs
 end
 
 
