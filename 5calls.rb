@@ -50,7 +50,7 @@ def parse_json(parsed_node_set)
     #website depends on users zipcode so for now I'm sending them to main 5calls site which picks up location
     #if we start uploading data across multiple zip codes, this variable should be more specific
     event_website = "https://5calls.org/"
-    event_location = "phone_only"
+    event_location = "phone"  #per cta-aggregator model requirements
 
     call_script = issue["script"]   #this is not accepted as-is via postman, open issue
 
