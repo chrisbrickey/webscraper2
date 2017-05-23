@@ -25,10 +25,38 @@ emilys_url_array = pull_event_urls(emilys_main_URL, emilys_event_url_tag_pattern
 def pull_emilys_event_data(event_website) #event_website must be a string
 
   event_title = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/h1")[0][7..-8]
+
   description = "not yet pulled" #can't be an empty string for CTA aggregator
-  start_time = "not yet pulled"
-  end_time = "not yet pulled"
-  event_location = "not yet pulled"
+
+  raw_date_times, raw_location = ScrapeEventURLs.create(event_website, ".bsd-contribForm-aboveContent/p")[1].split("<br><br>")
+
+  event_location = raw_location[2..-9].gsub("\r\n", "").gsub("<br>", ", ")
+  # puts "event_location: #{event_location}"
+
+
+  stripped_raw_date_times = raw_date_times.gsub("\n", "").gsub("\r", "").gsub("<p>", "")
+  date, both_times = stripped_raw_date_times.split("<br>")
+
+  start_time, end_time = both_times.split(" - ")
+
+  #determines a.m. or p.m. for start_time
+  meridiem = String.new
+  unless start_time.chars.any? { |l| ["A", "a", "P", "p"].include?(l) }
+    if end_time.chars.any? { |l| ["A", "a"].include?(l) }
+      meridiem = "a.m."
+    else
+      meridiem = "p.m."
+    end
+
+    start_time += " #{meridiem}"
+  end
+
+
+  start_time = "#{date} #{start_time}"
+  puts "start_time: #{start_time}\n\n"
+  end_time = "#{date} #{end_time}"
+  puts "end_time: #{end_time}\n\n"
+
 
   #These categories can't yet be pulled from the url data, so they are given assumptions based on knowledge of Emilys List events in general
   free = false
