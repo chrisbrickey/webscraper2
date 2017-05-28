@@ -5,10 +5,10 @@ require 'json'
 require 'pry'
 
 # require 'cta_aggregator_client' #to use Ruby client to send/receive from local cta-aggregator
-require './scrape_event_urls'
+require './modules/scrape_event_urls'
 include ScrapeEventURLs
 
-require './create_json_object'
+require './modules/create_json_object'
 include CreateJsonObject
 
 #this loop configures this file to use cta_aggregator_client (to send/receive with locally running cta-aggregator)

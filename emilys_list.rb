@@ -5,16 +5,16 @@ require 'date'     #required by FormatDateTime module
 require 'geokit'   #required by DetermineTimezone module
 require 'timezone' #required by DetermineTimezone module
 
-require './scrape_event_urls'
+require './modules/scrape_event_urls'
 include ScrapeEventURLs
 
-require './create_json_object'
+require './modules/create_json_object'
 include CreateJsonObject
 
-require './format_date_time'
+require './modules/format_date_time'
 include FormatDateTime
 
-require './determine_timezone'
+require './modules/determine_timezone'
 include DetermineTimezone
 
 
