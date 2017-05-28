@@ -15,13 +15,12 @@ Ruby version 2.4.0p0
 ## Setup
 * `bundle install`
 * Run 5calls.org scraper from terminal: `ruby 5calls.rb`
-* Run Emily's List individual url scraper from terminal: `ruby emilys_individual_sites.rb`
+* Run Emily's List individual url scraper from terminal: `ruby emilys_list.rb`
 * See reference folder for guidance on nokogiri HTML selectors and zipcode source, among other things
 
 
 ## Upcoming Features
-* Include timezone based on location (for Emily's list)
-* Exclude past events (from Emily's List URL generator)
+* Adjust timezone based on location (for Emily's list)
 * Add method calls to get the scrapers creating and editing CTA calls with a locally running cta-aggregator.  See guidance in "/reference/cta_aggregator_client_REFERENCE" and cta-aggregator-client README
 * Streamline process of pulling data from zipcodes - eliminate duplicates from looping through zipcode array and/or use mechanize to pass in forms when required
 * Incorporate regular expressions to make parsing less clunky
