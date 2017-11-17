@@ -42,3 +42,10 @@ end
 scraper = EmilysList.new
 events_array = scraper.events
 p events_array
+#result...
+# [{"start_date"=>#<Date: 2017-12-08 ((2458096j,0s,0n),+0s,2299161j)>, 
+# "location"=>{:locality=>"Dallas", :region=>"TX "}, 
+# "title"=>"Reception", 
+# "browser_url"=>"https://secure.emilyslist.org/page/contribute/dallas-2017-regional-reception", 
+# "identifiers"=>["emilyslist:dallas-2017-regional-reception"], 
+# "origin_system"=>"Emily's List"}]
