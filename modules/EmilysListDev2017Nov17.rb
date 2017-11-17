@@ -38,3 +38,7 @@ class EmilysList
     events
   end
 end
+
+scraper = EmilysList.new
+events_array = scraper.events
+p events_array
